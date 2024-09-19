@@ -10,11 +10,16 @@ public class Agent : ContextBehaviour
     private CharacterController _characterController;
     private Animator _animator;
 
-    private bool _canMove = true;
+    private bool _canMove = false;
     private static readonly int CanWalk = Animator.StringToHash("CanWalk");
+    private FinishMenuUI _finishMenuUI;
+
+    public AgentGrade AgentGrade { get; private set; }
 
     private void Awake()
     {
+        _finishMenuUI = FindAnyObjectByType<FinishMenuUI>(FindObjectsInactive.Include);
+        AgentGrade = GetComponent<AgentGrade>();
         _animator = GetComponentInChildren<Animator>();
         _characterController = GetComponent<CharacterController>();
     }
@@ -23,6 +28,7 @@ public class Agent : ContextBehaviour
     {
         Context.ObservedAgent = this;
         Context.SceneCamera.AttachToAgent();
+        _animator.SetBool(CanWalk, false);
     }
 
     private void Update()
@@ -30,7 +36,7 @@ public class Agent : ContextBehaviour
         if (_canMove == false)
             return;
 
-        _characterController.Move(transform.right * Mouse.current.delta.value.x * 3 * Time.deltaTime +
+        _characterController.Move(transform.right * Touchscreen.current.delta.value.x * 3 * Time.deltaTime +
                                   transform.forward * _speed * Time.deltaTime);
     }
 
@@ -46,5 +52,12 @@ public class Agent : ContextBehaviour
     {
         _canMove = false;
         _animator.SetBool(CanWalk, false);
+        _finishMenuUI.Show();
+    }
+
+    public void PermitMove()
+    {
+        _canMove = true;
+        _animator.SetBool(CanWalk, true);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.SceneManagement;
 
 public class Gameplay : ContextBehaviour
 {
@@ -7,7 +8,7 @@ public class Gameplay : ContextBehaviour
         StartGameplay();
     }
 
-    private void StartGameplay()
+    public void StartGameplay()
     {
         Context.LevelManager.NextLevel();
         Context.LevelManager.StartLevel();
@@ -16,5 +17,10 @@ public class Gameplay : ContextBehaviour
     public void FinishGameplay()
     {
         Context.ObservedAgent.Finish();
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(0);
     }
 }

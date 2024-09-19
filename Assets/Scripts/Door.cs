@@ -2,15 +2,18 @@
 
 public class Door : MonoBehaviour
 {
-    private Animation _animation;
+    private AudioSource _audioSource;
+    private Animator _animator;
 
     private void Awake()
     {
-        _animation = GetComponent<Animation>();
+        _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void Open()
     {
-        _animation.Play();
+        _animator.Play("Open");
+        _audioSource.Play();
     }
 }

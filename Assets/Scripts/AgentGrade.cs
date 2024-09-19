@@ -4,24 +4,32 @@ using UnityEngine;
 
 public class AgentGrade : MonoBehaviour
 {
-    private const int ExpToNextGrade = 10;
+    public const int ExpToNextGrade = 10;
 
     [SerializeField] private GameObject[] _appearances;
+    [SerializeField] private AudioClip _addSound;
+    [SerializeField] private AudioClip _removeSound;
 
+    private AudioSource _audioSource;
     private int _currentExp;
     private int _previousExp;
     private Agent _agent;
 
-    private int CurrentExp
+    public int CurrentExp
     {
         get { return _currentExp; }
         set { _currentExp = Mathf.Clamp(value, 0, _appearances.Length * ExpToNextGrade); }
     }
 
-    private int PreviousExp
+    public int PreviousExp
     {
         get { return _previousExp; }
         set { _previousExp = Mathf.Clamp(value, 0, _appearances.Length * ExpToNextGrade); }
+    }
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -43,6 +51,17 @@ public class AgentGrade : MonoBehaviour
             }
 
             buff.gameObject.SetActive(false);
+
+            if (buff.ExpImpact > 0)
+            {
+                _audioSource.clip = _addSound;
+                _audioSource.Play();
+            }
+            else
+            {
+                _audioSource.clip = _removeSound;
+                _audioSource.Play();
+            }
         }
 
         if (other.TryGetComponent(out Door door))
